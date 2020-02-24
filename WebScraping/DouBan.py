@@ -52,6 +52,6 @@ for i in range(1):
         # time.sleep(randint(1, 5))
         list.append(movie_info)
     result = pd.DataFrame(list, columns=['title', 'alias', 'date', 'rate'])
-    result.to_csv('douban.csv', mode='a', header=True)
+    result.to_csv('douban.csv', mode='a', header=True, index=None)
     time.sleep(randint(1, 10))
 
