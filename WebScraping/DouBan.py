@@ -5,14 +5,18 @@ Crawl movie score from DouBan
 import pandas as pd
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
+from requests import get
 import json
 import time
 from random import randint
+import WebScraping.proxyPool
 
-def getInfo(movie_url):
-    req = Request(movie_url, headers={'User-Agent': 'Mozilla/5.0'})
-    response = urlopen(req).read()
-    html_soup = BeautifulSoup(response, "html.parser")
+
+def getInfo(movie_url, proxy):
+    # req = Request(movie_url, headers={'User-Agent': 'Mozilla/5.0'})
+    # response = urlopen(req).read()
+    response = get(movie_url, headers={'User-Agent': 'Mozilla/5.0'}, proxies={"https": proxy})
+    html_soup = BeautifulSoup(response.text, "html.parser")
     content = html_soup.find('div', class_="subjectwrap clearfix")
 
     result = []
@@ -41,17 +45,30 @@ def getInfo(movie_url):
     return result
 
 
-url = "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&start={}&limit=10"
-for i in range(1):
-    list = []
-    req = Request(url.format(i * 100), headers={'User-Agent': 'Mozilla/5.0'})
-    response = urlopen(req).read()
-    data = json.loads(response.decode('utf-8'))['data']
-    for d in data:
-        movie_info = getInfo(d['url'])
-        # time.sleep(randint(1, 5))
-        list.append(movie_info)
-    result = pd.DataFrame(list, columns=['title', 'alias', 'date', 'rate'])
-    result.to_csv('douban.csv', mode='a', header=True, index=None)
-    time.sleep(randint(1, 10))
+# url = "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&start={}&limit=100"
+# for i in range(1):
+#     list = []
+#
+#     # Select proxy
+#     inst = WebScraping.proxyPool.Proxy("proxy.txt")
+#     proxy = inst.get_proxy()
+#
+#     # req = Request(url.format(80 * 100), headers={'User-Agent': 'Mozilla/5.0'},)
+#     # response = urlopen(req).read()
+#     # response = urlopen(req)
+#     response = get(url.format(i * 100), headers={'User-Agent': 'Mozilla/5.0'}, proxies={"https": proxy}, timeout=10)
+#     data = json.loads(response.text)['data']
+#     for d in data:
+#         proxy = inst.get_proxy()
+#         movie_info = getInfo(d['url'], proxy)
+#         # time.sleep(randint(1, 5))
+#         list.append(movie_info)
+#     result = pd.DataFrame(list, columns=['title', 'alias', 'date', 'rate'])
+#     result.to_csv('douban.csv', mode='a', header=True, index=None)
+#     time.sleep(randint(1, 10))
 
+inst = WebScraping.proxyPool.Proxy('proxy.txt')
+for i in range(100):
+    proxy = inst.get_proxy()
+    print(proxy)
+    WebScraping.proxyPool.test_proxy(proxy)
