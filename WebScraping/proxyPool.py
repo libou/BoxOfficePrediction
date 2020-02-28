@@ -26,7 +26,7 @@ class Proxy(object):
         return proxy
 
 
-def get_proxy_(page_no):
+def get_proxy(page_no):
     url = "https://www.xicidaili.com/nn/{}".format(page_no)
     req = Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36'})
     response = urlopen(req)
@@ -50,10 +50,6 @@ def get_proxy_(page_no):
     return result
 
 
-# with open("proxy.txt", 'a+') as file:
-#     for i in range(5):
-#         proxy_list = get_proxy_(i+1)
-#         file.writelines("%s\n" % proxy for proxy in proxy_list)
 def test_proxy(proxy):
     https_url = "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&start=0&limit=100"
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"}
@@ -71,3 +67,5 @@ def test_proxy(proxy):
         msg = str(e)
         print(msg)
         return False
+
+
