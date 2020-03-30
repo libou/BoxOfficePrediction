@@ -2,14 +2,9 @@
 Crawl movie score from DouBan
 """
 
-import pandas as pd
 from bs4 import BeautifulSoup
-from urllib.request import Request, urlopen
 from requests import get
-import json
-import time
-from random import randint
-import WebScraping.proxyPool
+import WebScraping.proxy.proxy_pool
 
 
 def getInfo(movie_url, proxy):
@@ -67,8 +62,10 @@ def getInfo(movie_url, proxy):
 #     result.to_csv('douban.csv', mode='a', header=True, index=None)
 #     time.sleep(randint(1, 10))
 
-inst = WebScraping.proxyPool.Proxy('proxy.txt')
-for i in range(100):
-    proxy = inst.get_proxy()
-    print(proxy)
-    WebScraping.proxyPool.test_proxy(proxy)
+# inst = WebScraping.proxyPool.Proxy('proxy.txt')
+# proxy = inst.get_proxy()
+# print(proxy)
+# proxy = "https://182.138.182.133:8118"
+# WebScraping.proxyPool.test_proxy(proxy)
+
+WebScraping.proxy.proxy_pool.test_proxy_post()
