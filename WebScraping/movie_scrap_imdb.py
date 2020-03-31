@@ -56,11 +56,12 @@ def release_date_scraping(url, proxies):
 
 
 input_year = int(input("Please enter start year (eg. 2016): "))
-if input_year > current_year:
-    print("No movie is recorded in year %i yet!!" % (input_year))
+end_year = int(input("Please enter end year (eg. 2020): "))
+if input_year > current_year or end_year > current_year:
+    print("No movie is recorded in year %i yet!!" % (max(input_year, end_year)))
 else:
     starts = range(1, 10000, 50)
-    for year in tqdm(range(input_year, current_year + 1)):
+    for year in tqdm(range(input_year, end_year + 1)):
         for start in tqdm(starts):
             names = []
             release_dates = []
@@ -86,6 +87,14 @@ else:
 
             # Extract data from individual movie container
             for container in movie_containers:
+                # The gross
+                if len(container.find_all('span', attrs={'name': 'nv'})) > 1:
+                    gross = container.find_all('span', attrs={'name': 'nv'})[1]['data-value']
+                    grosses.append(gross)
+                else:
+                    continue
+                    # grosses.append('None')
+
                 # The name
                 name = container.h3.a.text
                 names.append(name)
@@ -147,13 +156,6 @@ else:
                 else:
                     imdb = float(container.strong.text)
                 imdb_ratings.append(imdb)
-
-                # The gross
-                if len(container.find_all('span', attrs={'name': 'nv'})) > 1:
-                    gross = container.find_all('span', attrs={'name': 'nv'})[1]['data-value']
-                    grosses.append(gross)
-                else:
-                    grosses.append('None')
 
                 # The Metascore
                 if container.find('span', class_='metascore') == None:
