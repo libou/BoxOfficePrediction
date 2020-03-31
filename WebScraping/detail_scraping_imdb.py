@@ -23,6 +23,8 @@ def get_details(url):
     details_container = html_soup.find('div', attrs={'id': 'titleDetails'})
     details = details_container.find_all('div', class_="txt-block")
     for detail in details:
+        if detail.h4 is None:
+            continue
         if "Country:" in detail.h4.text:
             result['country'] = detail.a.text
             continue
