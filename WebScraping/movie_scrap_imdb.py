@@ -64,6 +64,7 @@ else:
     for year in tqdm(range(input_year, end_year + 1)):
         for start in tqdm(starts):
             names = []
+            ids = []
             release_dates = []
             years = []
             content_ratings = []
@@ -99,8 +100,11 @@ else:
                 name = container.h3.a.text
                 names.append(name)
 
-                # The release date
+                # The movie id
                 movie_id = container.h3.a['href'].strip('/').split('/')[1]
+                ids.append(movie_id)
+
+                # The release date
                 release_date_url = "http://www.imdb.com/title/{}/releaseinfo?ref_=tt_dt_dt".format(movie_id)
                 release_date = release_date_scraping(release_date_url, proxies)
                 release_dates.append(release_date)
@@ -112,21 +116,21 @@ else:
                 years.append(movie_year)
 
                 # The content rating
-                if container.find('span', class_='certificate') == None:
+                if container.find('span', class_='certificate') is None:
                     content_rating = "None"
                 else:
                     content_rating = container.find('span', class_='certificate').text
                 content_ratings.append(content_rating)
 
                 # The runtime
-                if container.find('span', class_='runtime') == None:
+                if container.find('span', class_='runtime') is None:
                     runtime = "None"
                 else:
                     runtime = container.find('span', class_='runtime').text
                 runtimes.append(runtime)
 
                 # The genre
-                if container.find('span', class_='genre') == None:
+                if container.find('span', class_='genre') is None:
                     genre = "None"
                 else:
                     genre = container.find('span', class_='genre').text.strip()
@@ -151,21 +155,21 @@ else:
                 stars.append(star_list)
 
                 # The IMDB rating
-                if container.strong == None:
+                if container.strong is None:
                     imdb = "None"
                 else:
                     imdb = float(container.strong.text)
                 imdb_ratings.append(imdb)
 
                 # The Metascore
-                if container.find('span', class_='metascore') == None:
+                if container.find('span', class_='metascore') is None:
                     m_score = "None"
                 else:
                     m_score = container.find('span', class_='metascore').text.strip()
                 metascores.append(m_score)
 
                 # The number of votes
-                if container.find('span', attrs={'name': 'nv'}) == None:
+                if container.find('span', attrs={'name': 'nv'}) is None:
                     vote = "None"
                 else:
                     vote = container.find('span', attrs={'name': 'nv'})['data-value']
@@ -175,19 +179,20 @@ else:
             # print(start)
             # print(len(names))
             df = pd.DataFrame({'movie': names,
-                                'year': years,
-                                'release_date': release_dates,
-                                'content_rating': content_ratings,
-                                'runtime': runtimes,
-                                'genre': genres,
-                                'intro': intros,
-                                'director': directors,
-                                'stars': stars,
-                                'imdb': imdb_ratings,
-                                'gross': grosses,
-                                'metascore': metascores,
-                                'vote': votes
-                                })
+                               'id': ids,
+                               'year': years,
+                               'release_date': release_dates,
+                               'content_rating': content_ratings,
+                               'runtime': runtimes,
+                               'genre': genres,
+                               'intro': intros,
+                               'director': directors,
+                               'stars': stars,
+                               'imdb': imdb_ratings,
+                               'gross': grosses,
+                               'metascore': metascores,
+                               'vote': votes
+                               })
             if not os.path.exists('IMDB_Top10000.csv'):
                 df.to_csv('IMDB_Top10000.csv', header=True, mode='a', index=None, encoding='utf_8_sig')
             else:
