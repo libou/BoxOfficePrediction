@@ -23,10 +23,11 @@ def release_date_scraping(url):
 
 years = range(2008, 2020)
 for year in tqdm(years):
-    df = pd.read_csv('../data/merged_data/merged_{}'.format(year))
+    df = pd.read_csv('../data/merged_data/merged_{}.csv'.format(year))
     date_df = df['release_date']
     isna_df = date_df.isna()
-    for idx, row in isna_df:
+    for idx, row in tqdm(isna_df.iteritems()):
         if row is True:
             url = "http://www.imdb.com/title/{}/releaseinfo?ref_=tt_dt_dt".format(df['id'].iloc[idx])
-            date_df.iloc[idx] = release_date_scraping(url)
+            df['release_date'].iloc[idx] = release_date_scraping(url)
+    df.iloc[:, 1:].to_csv('../data/merged_data/merged_{}.csv'.format(year), encoding='utf-8-sig', index=None, mode='w')

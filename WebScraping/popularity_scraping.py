@@ -7,6 +7,7 @@ import pandas as pd
 from WebScraping.proxy.proxy_pool import Proxy
 import datetime
 import re
+import tqdm
 
 
 def popularity_scrap(names, date, proxy):
@@ -67,13 +68,19 @@ inst_proxy = Proxy('proxy/proxy.txt')
 input_year = int(input("Please enter start year (eg. 2016): "))
 current_year = int(datetime.datetime.now().year)
 assert input_year <= current_year
-df = pd.read_csv("../data/IMDB_movie_detail_{}.csv".format(input_year))
+
+df = pd.read_csv("../data/merged_data/merged_{}.csv".format(input_year))
 result = []
 for idx, row in df.iterrows():
     movie = row['movie']
+    print(movie)
     name = row['extracted_name']
     date_str = row['release_date']
-    date = datetime.datetime.strptime(date_str, '%d-%m-%y').timestamp()
+    date_pattern = re.compile(r"[0-9]+-[a-zA-Z]+-[0-9]+")
+    if date_pattern.match(date_str):
+        date = datetime.datetime.strptime(date_str, '%d-%b-%y').timestamp()
+    else:
+        date = datetime.date(input_year, 6, 30)
     while True:
         proxy = inst_proxy.get_proxy()
         try:
