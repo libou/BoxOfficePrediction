@@ -8,7 +8,7 @@ import pandas as pd
 import sys
 import datetime
 import os
-from WebScraping.proxy.proxy_pool import Proxy
+from .proxy.proxy_pool import Proxy
 import re
 
 # Lists to store the scraped data in

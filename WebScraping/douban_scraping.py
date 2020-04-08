@@ -4,7 +4,7 @@ Crawl movie score from DouBan
 
 from bs4 import BeautifulSoup
 from requests import get
-import WebScraping.proxy.proxy_pool
+from .proxy import proxy_pool
 
 
 def getInfo(movie_url, proxy):

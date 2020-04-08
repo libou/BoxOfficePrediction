@@ -1,5 +1,5 @@
 import requests
-from WebScraping.proxy.proxy_pool import Proxy
+from .proxy_pool import Proxy
 
 
 def test_proxy(proxy, https_url):

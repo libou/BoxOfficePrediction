@@ -8,7 +8,7 @@ from tqdm import tqdm
 import pandas as pd
 import datetime
 import os
-from WebScraping.proxy.proxy_pool import Proxy
+from .proxy.proxy_pool import Proxy
 
 current_year = int(datetime.datetime.now().year)
 headers = {'User-agent': 'Mozilla/5.0'}

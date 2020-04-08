@@ -4,16 +4,15 @@ Crawl the popularity of a specific movie on Twitter from www.trendsmap.com
 import json
 import requests
 import pandas as pd
-from WebScraping.proxy.proxy_pool import Proxy
+from .proxy.proxy_pool import Proxy
 import datetime
 import re
-import tqdm
 
 
 def popularity_scrap(names, date, proxy):
     """
     Crawl the popularity of a movie discussed on Twitter
-    :param name: a list of extracted keywords of the movie's title
+    :param names: a list of extracted keywords of the movie's title
     :param date: the timestamp of the release date
     :param proxy: the address of the proxy server
     :return: a tuple including the average popularity from 2014 to 2020, the average popularity within 30
@@ -69,27 +68,27 @@ input_year = int(input("Please enter start year (eg. 2016): "))
 current_year = int(datetime.datetime.now().year)
 assert input_year <= current_year
 
-df = pd.read_csv("../data/merged_data/merged_{}.csv".format(input_year))
+df = pd.read_csv("../data/merged_data/merged_{}.csv".format(input_year), keep_default_na=False)
 result = []
-for idx, row in df.iterrows():
-    movie = row['movie']
-    print(movie)
-    name = row['extracted_name']
-    date_str = row['release_date']
-    date_pattern = re.compile(r"[0-9]+-[a-zA-Z]+-[0-9]+")
-    if date_pattern.match(date_str):
-        date = datetime.datetime.strptime(date_str, '%d-%b-%y').timestamp()
-    else:
-        date = datetime.date(input_year, 6, 30)
-    while True:
-        proxy = inst_proxy.get_proxy()
-        try:
-            (avg_all, avg_30, max_30) = popularity_scrap(name, date, proxy=proxy)
-            result.append([movie, avg_all, avg_30, max_30])
-            break
-        except Exception:
-            print("Wrong proxy: {}".format(proxy))
-            continue
-
-new_df = pd.DataFrame(result, columns=['movie', 'avg_all', 'avg_30', 'max_30'])
-new_df.to_csv('../data/movie_popularity_{}'.format(input_year), header=True, encoding='utf_8_sig')
+for input_year in range(2008, 2014):
+    for idx, row in df.iterrows():
+        movie = row['movie']
+        print(idx, ": ", movie)
+        names = eval(row['extracted_name'])
+        date_str = row['release_date']
+        date_pattern = re.compile(r"[0-9]+ [a-zA-Z]+ [0-9]+")
+        if date_pattern.match(date_str):
+            date = datetime.datetime.strptime(date_str, '%d %B %Y').timestamp()
+        else:
+            date = datetime.datetime(input_year, 6, 30).timestamp()
+        while True:
+            proxy = inst_proxy.get_proxy()
+            try:
+                (avg_all, avg_30, max_30) = popularity_scrap(names, date, proxy=proxy)
+                result.append([movie, avg_all, avg_30, max_30])
+                break
+            except Exception:
+                print("Wrong proxy: {}".format(proxy))
+                continue
+    new_df = pd.DataFrame(result, columns=['movie', 'avg_all', 'avg_30', 'max_30'])
+    new_df.to_csv('../data/movie_popularity_{}.csv'.format(input_year), header=True, encoding='utf_8_sig')
