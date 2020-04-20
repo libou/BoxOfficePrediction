@@ -5,7 +5,7 @@ Generate training set and testing set containing different combination of featur
 from feature_engineering import *
 from sklearn.model_selection import train_test_split
 
-df = pd.read_csv('data/boxoffice_dataset_part.csv', index_col=0)
+df = pd.read_csv('data/boxoffice_dataset.csv', index_col=0)
 
 # Fixed part
 # Budget
@@ -64,7 +64,7 @@ Trainset, company_list = select_top_k(Trainset, 'production_company', existed=Tr
 
 # Save training set
 Trainset.fillna(0, inplace=True)
-Trainset.to_csv("trainset.csv", encoding='utf-8-sig')
+Trainset.to_csv("data/trainset.csv", encoding='utf-8-sig')
 
 """
 Process testing set
@@ -85,4 +85,4 @@ Testset.loc[:, 'stars'] = Testset['stars'].map(lambda x: len(set(x).intersection
 
 # Save testing set
 Testset.fillna(0, inplace=True)
-Testset.to_csv('testset.csv', encoding='utf-8-sig')
+Testset.to_csv('data/testset.csv', encoding='utf-8-sig')
