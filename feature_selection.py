@@ -49,6 +49,8 @@ Trainset, Testset, _, _ = train_test_split(df, df, test_size=0.3)
 
 """
 Process Training set
+Each line is a different method of categorical variable encoding.
+Please keep commenting the same row for training set and testing set.
 """
 # Director
 # Trainset, director_map = mean_sum_encoding(Trainset, 'director', method='mean', benchmark='gross')
@@ -68,6 +70,8 @@ Trainset.to_csv("data/trainset.csv", encoding='utf-8-sig')
 
 """
 Process testing set
+Each line is a different method of categorical variable encoding.
+Please keep commenting the same row for training set and testing set.
 """
 # Director
 # Testset.loc[:, 'director'] = Testset['director'].map(director_map)

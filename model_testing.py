@@ -29,5 +29,6 @@ result.to_csv('data/prediction.csv', encoding='utf-8-sig')
 
 print('r2_score: {}'.format(r2))
 
+# Show the feature importance
 xgb.plot_importance(model, max_num_features=15)
 plt.show()
